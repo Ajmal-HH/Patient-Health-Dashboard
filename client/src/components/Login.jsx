@@ -31,7 +31,7 @@ const Login = () => {
     try {
       await signInValidationSchema.validate({ email, password }, { abortEarly: false })
 
-      axios.post(`https://patient-health-dashboard-psi.vercel.app/login`, { email, password })
+      axios.post(`http://localhost:5001/login`, { email, password })
         .then((response) => {
           toast.success('Login successfully')
           localStorage.setItem('token', response.data.token);

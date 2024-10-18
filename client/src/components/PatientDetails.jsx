@@ -18,7 +18,7 @@ function PatientDetails() {
             navigate('/login');
             return;
         }
-        axios.get(`https://patient-health-dashboard-psi.vercel.app/patient-details?patientId=${patientId}`)
+        axios.get(`http://localhost:5001/patient-details?patientId=${patientId}`)
             .then((response) => {
                 const data = response.data;
                 setPatient(data);

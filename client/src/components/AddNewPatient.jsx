@@ -3,6 +3,8 @@ import bgImage from '../assets/addpatient.jpg';
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
+
 
 
 
@@ -11,7 +13,28 @@ function AddNewPatient() {
     const [patientAge, setPatientAge] = useState('')
     const [patientMobile, setPatientMobile] = useState('')
     const [patientPlace, setPatientPlace] = useState('')
+    const [errors, setErrors] = useState({})
+
     const navigate = useNavigate();
+
+    const patientDataValidationSchema = Yup.object({
+      patientName: Yup.string()
+      .matches(/^[a-zA-Z]+(?:\s+[a-zA-Z]+)*$/, 'Please enter a name containing only alphabetic characters.')
+      .trim()
+      .required('Name is required')
+      .min(3, 'Name must be at least 3 characters'),  
+      patientMobile: Yup.string()     
+          .matches(/^\d{10}$/, "Mobile number must be 10 digits")
+          .required('Mobile number is required'),
+          patientPlace: Yup.string()
+          .matches(/^[a-zA-Z]+(?:\s+[a-zA-Z]+)*$/, 'Please enter a name containing only alphabetic characters.')
+          .trim()
+          .required('Place is required')
+          .min(3, 'Place must be at least 3 characters'),
+          patientAge: Yup.string()
+          .trim()
+          .required('Age is required')
+  });
 
     const token = localStorage.getItem("token");
 
@@ -25,7 +48,9 @@ function AddNewPatient() {
     }
         e.preventDefault()
         try {
-            axios.post('https://patient-health-dashboard-psi.vercel.app/addpatient',{patientName,patientPlace,patientMobile,patientAge})
+          await patientDataValidationSchema.validate({ patientName,patientPlace,patientMobile,patientAge }, { abortEarly: false })
+
+            axios.post('http://localhost:5001/addpatient',{patientName,patientPlace,patientMobile,patientAge})
             .then(() => {
                 setPatientAge('')
                 setPatientMobile('')
@@ -42,8 +67,12 @@ function AddNewPatient() {
                 }
               })
         } catch (error) {
-            console.log(error.message)
-        }
+          const newErrors = {}
+
+          error.inner.forEach((err) => {
+            newErrors[err.path] = err.message
+          })
+          setErrors(newErrors)        }
 
     }
 
@@ -71,14 +100,16 @@ function AddNewPatient() {
               className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
               placeholder=" " 
               onChange={(e)=>setPatientName(e.target.value)}
-              required 
             />
+
             <label 
               htmlFor="name" 
               className="peer-focus:font-medium absolute text-sm text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Patient Name
             </label>
+            {errors.patientName && <div className='text-red-600'>{errors.patientName}</div>}
+
           </div>
 
           {/* Age Input */}
@@ -92,7 +123,6 @@ function AddNewPatient() {
               placeholder=" " 
               value={patientAge}
               onChange={(e)=>setPatientAge(e.target.value)}
-              required 
             />
             <label 
               htmlFor="age" 
@@ -100,6 +130,8 @@ function AddNewPatient() {
             >
               Age
             </label>
+            {errors.patientAge && <div className='text-red-600'>{errors.patientAge}</div>}
+
           </div>
 
           {/* Mobile Number Input */}
@@ -112,7 +144,6 @@ function AddNewPatient() {
               placeholder=" " 
               value={patientMobile}
               onChange={(e)=>setPatientMobile(e.target.value)}
-              required 
             />
             <label 
               htmlFor="mobile" 
@@ -120,6 +151,8 @@ function AddNewPatient() {
             >
               Mobile Number
             </label>
+            {errors.patientMobile && <div className='text-red-600'>{errors.patientMobile}</div>}
+
           </div>
 
           {/* Place Input */}
@@ -132,7 +165,6 @@ function AddNewPatient() {
               className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
               placeholder=" " 
               onChange={(e)=>setPatientPlace(e.target.value)}
-              required 
             />
             <label 
               htmlFor="place" 
@@ -140,6 +172,8 @@ function AddNewPatient() {
             >
               Place
             </label>
+            {errors.patientPlace && <div className='text-red-600'>{errors.patientPlace}</div>}
+
           </div>
 
           {/* Submit Button */}

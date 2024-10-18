@@ -19,7 +19,7 @@ function PatientList() {
 
       //pagination
       const [currentPage, setCurrentPage] = useState(1);
-      const [itemsPerPage] = useState(10); // Items per page
+      const [itemsPerPage] = useState(5); // Items per page
       const indexOfLastItem = currentPage * itemsPerPage;
       const indexOfFirstItem = indexOfLastItem - itemsPerPage;
       const records = patients.slice(indexOfFirstItem, indexOfLastItem);
@@ -33,7 +33,7 @@ function PatientList() {
       navigate('/login');
       return;
   }
-    axios.get(`https://patient-health-dashboard-psi.vercel.app/patients`)
+    axios.get(`http://localhost:5001/patients`)
     .then(response => {
         setPatients(response.data);
     })
