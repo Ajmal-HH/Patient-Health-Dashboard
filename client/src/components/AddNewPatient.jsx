@@ -25,7 +25,7 @@ function AddNewPatient() {
     }
         e.preventDefault()
         try {
-            axios.post('http://localhost:5001/addpatient',{patientName,patientPlace,patientMobile,patientAge})
+            axios.post('https://patient-health-dashboard-psi.vercel.app/addpatient',{patientName,patientPlace,patientMobile,patientAge})
             .then(() => {
                 setPatientAge('')
                 setPatientMobile('')

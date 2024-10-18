@@ -24,7 +24,7 @@ function AddNotes() {
     }
 
     axios
-      .post(`http://localhost:5001/addnote?patientId=${patientId}`, { notes })
+      .post(`https://patient-health-dashboard-psi.vercel.app/addnote?patientId=${patientId}`, { notes })
       .then(() => {
         toast.success("Note added");
         navigate(-1)

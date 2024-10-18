@@ -13,7 +13,7 @@ const Dashboard = () => {
 
 
   const handleLogout = () => {
-    axios.get('http://localhost:5001/logout', {
+    axios.get('https://patient-health-dashboard-psi.vercel.app/logout', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -33,7 +33,7 @@ function PatientList() {
       navigate('/login');
       return;
   }
-    axios.get(`http://localhost:5001/patients`)
+    axios.get(`https://patient-health-dashboard-psi.vercel.app/patients`)
     .then(response => {
         setPatients(response.data);
     })
